@@ -1,11 +1,7 @@
-#ifndef RTOS_H
-#define RTOS_H
+#ifndef ESP8266_H
+#define ESP8266_H
 
-#include <stdint.h>
-
-typedef uint8_t		u8;
-typedef uint32_t	u32;
-typedef int32_t		s32;
+#include "c_types.h"
 
 extern void		ets_printf(const char* fmt, ...);
 extern void		ets_delay_us(u32 us);
@@ -13,7 +9,6 @@ extern void		ets_install_putc1(void (*)(u8));
 extern void		uart_tx_one_char(u8);
 extern void		ets_update_cpu_frequency(u32 mhz);
 
-#define INTERNAL			static
 #define BIT(a)				(1 << (a))
 #define REG32(a)			(*(volatile u32*)(a))
 

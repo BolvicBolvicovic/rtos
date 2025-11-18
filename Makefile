@@ -35,6 +35,8 @@ LFLAGS	= \
 	-L$(LD_DIR) \
 	-T$(LD_FILE)
 
+INC		= -I./lib
+
 CSRCS	?= $(wildcard *.c ./user/*.c)
 CXXSRCS	?= $(wildcard *.cpp ./user/*.cpp)
 ASRCs	?= $(wildcard *.s ./user/*.s)
@@ -57,28 +59,28 @@ $(ODIR)/$(TARGET): $(OBJS)
 	$(CC) $(LFLAGS) -o $@ $^
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: %.s
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: %.S
-	$(CC) $(CFLAGS) -D__ASSEMBLER__ -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -D__ASSEMBLER__ -o $@ -c $<
 
 $(OBJDIR)/%.o: user/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: user/%.cpp
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: user/%.s
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 $(OBJDIR)/%.o: user/%.S
-	$(CC) $(CFLAGS) -D__ASSEMBLER__ -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC) -D__ASSEMBLER__ -o $@ -c $<
 
 $(OBJDIR): $(ODIR)
 	@mkdir -p $(OBJDIR)
