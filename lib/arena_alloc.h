@@ -30,6 +30,29 @@ extern u8	_heap_start;
  * To use pop, you need to save the state of the stack pointer (.sp) 
  * before pushing to the arena and pass it as the mark argument to the macro.
  *
+ * Full example:
+ *
+ * void
+ * some_func_that_needs_heap_allocation(Arena* arena)
+ * {
+ * 		u32 mark = arena->sp;
+ * 		some_struct* my_struct_ptr = (some_struct*)arena_push(arena, sizeof(some_struct));
+ *
+ * 		// ... do some stuff with my_struct_ptr ...
+ *
+ * 		arena_pop(arena, mark);
+ * }
+ *
+ * void
+ * main(void)
+ * {
+ * 		Arena	my_arena = arena_init(0x1000); // 4kB
+ *
+ * 		some_func_that_needs_heap_allocation(&my_arena);
+ *
+ *		return 0;
+ * }
+ *
  * */
 
 typedef struct
@@ -44,14 +67,18 @@ arena_create(Arena* prev, u32 size)
 {
 	Arena new_arena;
 
-	new_arena.start = prev ? prev->end : ALIGN_UP_4((uptr)&_heap_start);
+	new_arena.start = prev ? prev->end : (u8*)(ALIGN_UP_4((uptr)&_heap_start));
 	new_arena.end	= new_arena.start + ALIGN_UP_4(size);
 	new_arena.sp 	= 0;
 
 	return new_arena;
 }
 
-#define ARENA_INIT(size)	(arena_create(0, size))
+INTERNAL inline Arena ALWAYS_INLINE_ATTR
+arena_init(u32 size)
+{
+	return arena_create(0, size);
+}
 
 INTERNAL inline u8*
 arena_push(Arena* arena, void* object, u32 object_size)
@@ -66,7 +93,10 @@ arena_push(Arena* arena, void* object, u32 object_size)
 	return res;
 }
 
-// Note: arena MUST be of type Arena*
-#define ARENA_POP(arena, mark)	(arena->sp = mark)
+INTERNAL inline void ALWAYS_INLINE_ATTR
+arena_pop(Arena* arena, u32 mark)
+{
+	arena->sp = mark;
+}
 
 #endif

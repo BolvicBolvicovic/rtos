@@ -103,4 +103,51 @@ clean:
 re: clean all
 
 dump: $(ODIR)/$(TARGET)
-	$(OBJDUMP) -d $< > rtos.asm
+	$(OBJDUMP) -d $< > rtos.dump
+
+TCC	= gcc
+TCXX	= g++
+TCFLAGS = \
+	-m32 \
+	-g \
+	-Wall \
+	-Wextra \
+	$(INC)
+TCXXFLAGS = $(TCFLAGS)
+TLFLAGS = -m32
+TTARGET = exec_tests
+TDIR = ./tests
+TCSRCS	?= $(wildcard $(TDIR)/*.c)
+TCXXSRCS	?= $(wildcard $(TDIR)/*.cpp)
+TASRCs	?= $(wildcard $(TDIR)/*.s)
+TASRCS	?= $(wildcard $(TDIR)/*.S)
+
+TOBJDIR	:= $(TDIR)/obj
+TOBJS	:= $(addprefix $(TOBJDIR)/, $(notdir $(TCSRCS:.c=.o))) \
+	$(addprefix $(TOBJDIR)/, $(notdir $(TCXXSRCS:.cpp=.o))) \
+	$(addprefix $(TOBJDIR)/, $(notdir $(TASRCs:.s=.o))) \
+	$(addprefix $(TOBJDIR)/, $(notdir $(TASRCS:.S=.o)))
+
+$(TDIR)/$(TTARGET): $(TOBJS)
+	$(TCC) $(TLFLAGS) -o $@ $^
+
+$(TOBJDIR)/%.o: $(TDIR)/%.c
+	$(TCC) $(TCFLAGS) -o $@ -c $<
+
+$(TOBJDIR)/%.o: $(TDIR)/%.cpp
+	$(TCXX) $(TCXXFLAGS) -o $@ -c $<
+
+$(TOBJDIR)/%.o: $(TDIR)/%.s
+	$(TCC) $(TCFLAGS) -o $@ -c $<
+
+$(TOBJDIR)/%.o: $(TDIR)/%.S
+	$(TCC) $(TCFLAGS) -D__ASSEMBLER__ -o $@ -c $<
+
+$(TOBJDIR):
+	@mkdir -p $(TOBJDIR)
+
+tests: $(TOBJDIR) $(TDIR)/$(TTARGET)
+	$(TDIR)/$(TTARGET)
+
+clean_tests:
+	rm -rf $(TOBJDIR) $(TDIR)/$(TTARGET)
