@@ -3,12 +3,13 @@
 
 #include "c_types.h"
 
-extern void		ets_install_putc1(void (*putc)(u8 c));
-extern void		ets_printf(const char* fmt, ...);
-extern void		ets_delay_us(u32 us);
-extern void		ets_update_cpu_frequency(u32 mhz);
-extern void		uart_div_modify(u8 uart, u32 div);
-extern void		rom_i2c_writeReg(u8 slave_addr, u8 reg_addr_len, u8 data_len, u32 data);
+extern void	ets_install_putc1(void (*putc)(u8 c));
+extern void	ets_printf(const char* fmt, ...);
+extern void	ets_delay_us(u32 us);
+extern void	ets_update_cpu_frequency(u32 mhz);
+extern void	uart_div_modify(u8 uart, u32 div);
+extern void	rom_i2c_writeReg(u8 slave_addr, u8 reg_addr_len, u8 data_len, u32 data);
+extern char*	strcpy(char* dst, char* src);
 
 #define BIT(a)			(1 << (a))
 #define REG32(a)		(*(volatile u32*)(a))

@@ -4,7 +4,7 @@
 #include "c_types.h"
 
 #define MEM_BLOCK_SIZE		0x1000
-#define MEM_TOTAL		81920
+#define MEM_TOTAL		(81920 / 2)
 #define MEM_TOTAL_BLOCKS	(MEM_TOTAL / MEM_BLOCK_SIZE)
 
 typedef u32 memory_free_block_list;

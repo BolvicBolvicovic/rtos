@@ -56,7 +56,9 @@ $(ODIR)/$(TARGET)-0x00000.bin: $(ODIR)/$(TARGET)
 	$(ESPTOOL) --chip esp8266 elf2image $<
 
 $(ODIR)/$(TARGET): $(OBJS)
-	$(CC) $(LFLAGS) -o $@ $^
+	make -C ./lib all
+	$(CC) $(LFLAGS) -o $@ $^ -L./lib -lrtos
+
 
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
@@ -95,7 +97,7 @@ flash: $(ODIR)/$(TARGET)-0x00000.bin
 	write_flash 0x00000 $<
 
 serial:
-	sudo minicom -D $(PORT) -b $(BAUDRATE)
+	arduino-cli monitor -p $(PORT) -c baudrate=$(BAUDRATE)
 
 clean:
 	rm -rf $(ODIR)/
