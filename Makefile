@@ -108,6 +108,7 @@ dump: $(ODIR)/$(TARGET)
 TCC	= gcc
 TCXX	= g++
 TCFLAGS = \
+	-DUNIT_TESTS \
 	-m32 \
 	-g \
 	-Wall \

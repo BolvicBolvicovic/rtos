@@ -3,7 +3,13 @@
 
 #include "c_types.h"
 
+#ifdef UNIT_TESTS
+extern u8*	_heap_start;
+#define ARENA_HEAP_BASE	((u8*)(ALIGN_UP_4((uptr)_heap_start)))
+#else
 extern u8	_heap_start;
+#define ARENA_HEAP_BASE	((u8*)(ALIGN_UP_4((uptr)&_heap_start)))
+#endif
 
 #define ALIGN_DOWN_4(a)	((a) & ~3)
 #define ALIGN_UP_4(a)	(((a) + 3) & ~3)
@@ -17,7 +23,7 @@ extern u8	_heap_start;
  * USAGE
  *
  * Init:
- * Initalize the first arena by calling ARENA_INIT(size).
+ * Initalize the first arena by calling arena_init(size).
  *
  * Alloc:
  * If you want to create a second arena, you need to pass the first arena you allocated as a parameter to arena_create.
@@ -67,7 +73,7 @@ arena_create(Arena* prev, u32 size)
 {
 	Arena new_arena;
 
-	new_arena.start = prev ? prev->end : (u8*)(ALIGN_UP_4((uptr)&_heap_start));
+	new_arena.start = prev ? prev->end : ARENA_HEAP_BASE;
 	new_arena.end	= new_arena.start + ALIGN_UP_4(size);
 	new_arena.sp 	= 0;
 
@@ -81,9 +87,9 @@ arena_init(u32 size)
 }
 
 INTERNAL inline u8*
-arena_push(Arena* arena, void* object, u32 object_size)
+arena_push(Arena* arena, u32 object_size)
 {
-	if (!arena || !object) return 0;
+	if (!arena) return 0;
 	object_size	= ALIGN_UP_4(object_size);
 	if (object_size >= (uptr)arena->end - arena->sp) return 0;
 	

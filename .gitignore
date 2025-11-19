@@ -56,3 +56,4 @@ dkms.conf
 
 # other files/folder
 .output
+tests/exec_tests

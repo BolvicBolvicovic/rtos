@@ -5,6 +5,7 @@
 
 #define ALWAYS_INLINE_ATTR	__attribute__((__always_inline__))
 #define INTERNAL	static
+#define GLOBAL		static
 
 typedef uint8_t		u8;
 typedef uint32_t	u32;
