@@ -158,3 +158,5 @@ tests: $(TOBJDIR) $(TDIR)/$(TTARGET)
 clean_tests:
 	rm -rf $(TOBJDIR) $(TDIR)/$(TTARGET)
 	make -C ./lib clean_tests
+
+fclean: clean clean_tests

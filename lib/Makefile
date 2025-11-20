@@ -24,7 +24,8 @@ CFLAGS	= \
 	-Wall
 
 CSRCS	= $(wildcard *.c)
-OBJS	= $(CSRCS:.c=.o)
+ASRCS	= $(wildcard *.S)
+OBJS	= $(CSRCS:.c=.o) $(ASRCS:.S=.o)
 
 all: $(ARCHIVE).a
 
@@ -32,6 +33,9 @@ $(ARCHIVE).a: $(OBJS)
 	$(AR) rcs $@ $^
 %.o: %.c
 	$(CC) $(INC) $(CFLAGS) -c $< -o $@
+
+%.o: %.S
+	$(CC) $(CFLAGS) $(INC) -D__ASSEMBLER__ -o $@ -c $<
 
 .PHONY: all clean tests
 

@@ -1,12 +1,19 @@
 #include "esp8266.h"
+#include "multitasking.h"
+
+#define MAIN_STACK_SIZE	(0x1000 / sizeof(u32))
 
 extern void	main(void);
 extern u32	_bss_start;
 extern u32	_bss_end;
 
+u32	main_stack[MAIN_STACK_SIZE] = {0};
+
 void
 call_user_start1()
 {
+	DISABLE_INTERRUPTS();
+
 	// TODO: This setup is for 80 MHz CPU frequency. Add support for other frequencies.
 	rom_i2c_writeReg(103, 4, 1, 0x88);
 	rom_i2c_writeReg(103, 4, 2, 0x91);
@@ -18,5 +25,5 @@ call_user_start1()
 	PIN_FUNC_SELECT(PERI_IO_MUX_U0TXD_U, 0);
 	
 	uart_div_modify(0, (CPU_FREQ_MHZ * 1000000u) / BAUDRATE);
-	main();
+	task_init((void*)main, 0, (u32*)(&main_stack[MAIN_STACK_SIZE - 1]));
 }
