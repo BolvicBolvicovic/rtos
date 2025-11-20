@@ -52,9 +52,20 @@ typedef struct Task_s
 	struct Task_s*	next;
 } Task;
 
+/* name: task_yield
+ * task_yield saves the running tasks, adds it to the tail of ready tasks and does the context switch
+ * to the next task.
+ * */
 void	task_yield(void);
+
 //void	task_suspend(Task*);
 //void	task_resume(Task*);
+
+/* name: task_init
+ * @params: all parameters are only used in the task_create call that generates the first task.
+ * @ret: On success, should not return since the context switch should happen. On error, returns -1.
+ * 	 For the unit tests, should return 0 on success.
+ * */
 s32	task_init(void* task_routine, void* task_routine_param, u32* task_stack_top);
 
 /* name: task_create

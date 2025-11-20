@@ -1,7 +1,22 @@
 #include "multitasking.h"
 
+#ifdef UNIT_TESTS
+INTERNAL void
+_task_context_switch(u32** task_old_sp, u32* task_new_sp)
+{
+	(void)task_old_sp;
+	(void)task_new_sp;
+}
+INTERNAL void
+_task_context_init(u32* __unused, u32* task_new_sp)
+{
+	(void)__unused;
+	(void)task_new_sp;
+}
+#else
 extern void	_task_context_switch(u32** task_old_sp, u32* task_new_sp);
 extern void	_task_context_init(u32* __unused, u32* task_new_sp);
+#endif
 
 Task	_task_pool[TASK_POOL_SIZE] = {0};
 u32	_task_pool_index= 0;
@@ -78,7 +93,7 @@ task_create(void* task_routine, void* task_routine_param, u32* task_stack_top)
 	frame->entry	= (u32)task_routine;
 	frame->exit	= (u32)task_end;
 	frame->param	= (u32)task_routine_param;
-	frame->ps	= (u32)0x20; // Note: Turn the interrupts on.
+	frame->ps	= 0x20; // Note: Turn the interrupts on.
 	frame->sar	= 0;
 
 	task->state = READY;

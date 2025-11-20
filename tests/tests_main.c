@@ -5,6 +5,7 @@ main(void)
 {
 	tests_arena_alloc();
 	tests_memory();
+	tests_multitasking();
 
 	return 0;
 }
