@@ -1,4 +1,5 @@
 #include "multitasking.h"
+#include "esp8266.h"
 
 #ifdef UNIT_TESTS
 INTERNAL void
@@ -91,15 +92,14 @@ task_create(void* task_routine, void* task_routine_param, u32* task_stack_top)
 
 	task_stack_frame*	frame = (task_stack_frame*)(task->sp) - 1;
 	frame->entry	= (u32)task_routine;
-	frame->exit	= (u32)task_end;
-	frame->param	= (u32)task_routine_param;
+	frame->a[0]	= (u32)task_end;
+	frame->a[2]	= (u32)task_routine_param;
 	frame->ps	= 0x20; // Note: Turn the interrupts on.
 	frame->sar	= 0;
 
 	task->state = READY;
 	return task->id;
 }
-
 
 s32
 task_init(void* task_routine, void* task_routine_param, u32* task_stack_top)
@@ -121,6 +121,6 @@ task_init(void* task_routine, void* task_routine_param, u32* task_stack_top)
 	_task_ready_tail= _task_running;
 	_task_context_init(0, _task_running->sp);
 
-	// Note: Should never be reached.
+	// Note: Should never be reached but in unit tests.
 	return 0;
 }

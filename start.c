@@ -7,7 +7,7 @@ extern void	main(void);
 extern u32	_bss_start;
 extern u32	_bss_end;
 
-u32	main_stack[MAIN_STACK_SIZE] = {0};
+//u32	main_stack[MAIN_STACK_SIZE] = {0};
 
 void
 call_user_start1()
@@ -25,5 +25,6 @@ call_user_start1()
 	PIN_FUNC_SELECT(PERI_IO_MUX_U0TXD_U, 0);
 	
 	uart_div_modify(0, (CPU_FREQ_MHZ * 1000000u) / BAUDRATE);
-	task_init((void*)main, 0, (u32*)(&main_stack[MAIN_STACK_SIZE - 1]));
+	//task_init((void*)main, 0, (u32*)(&main_stack[MAIN_STACK_SIZE - 1]));
+	main();
 }

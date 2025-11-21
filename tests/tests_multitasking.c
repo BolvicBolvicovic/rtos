@@ -16,7 +16,7 @@ tests_multitasking_basic_cycle(void)
 	assert(task_init((void*)tests_multitasking_dummy, 0, stack_top) == 0);
 	task_stack_frame*	frame = (task_stack_frame*)((uptr)stack_top & ~0xF) - 1;
 	assert(frame->entry	== (uptr)tests_multitasking_dummy);
-	assert(frame->param	== 0);
+	assert(frame->a[2]	== 0);
 	assert(frame->ps	== 0x20);
 	assert(frame->sar	== 0);
 }

@@ -14,24 +14,9 @@
 
 typedef struct
 {
-	uptr	exit;
-	uptr	sp;
-	uptr	param;
-	u32	a3;
-	u32	a4;
-	u32	a5;
-	u32	a6;
-	u32	a7;
-	u32	a8;
-	u32	a9;
-	u32	a10;
-	u32	a11;
-	u32	a12;
-	u32	a13;
-	u32	a14;
-	u32	a15;
+	u32	a[16];
 	u32	sar;
-	uptr	entry;
+	u32	entry;
 	u32	ps;
 } task_stack_frame;
 
